@@ -1,0 +1,39 @@
+# Maven
+academy/target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# IntelliJ IDEA
+../.idea/
+*.iml
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment
+.env
+
+# Compiled class files
+*.class
+
+# Windows-specific
+*.exe
+*.dll
+*.bat
+*.cmd
+
+# Mac-specific
+*.DS_Store
+
+# JetBrains Rider
+.idea/
+
+# VS Code (если используется)
+.vscode/
+
+# Backup files
+*.bak
+*.swp
