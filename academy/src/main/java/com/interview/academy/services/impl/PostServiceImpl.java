@@ -4,6 +4,7 @@ import com.interview.academy.domain.PostStatus;
 import com.interview.academy.domain.entities.Category;
 import com.interview.academy.domain.entities.Post;
 import com.interview.academy.domain.entities.Tag;
+import com.interview.academy.domain.entities.User;
 import com.interview.academy.repositories.PostRepository;
 import com.interview.academy.services.CategoryService;
 import com.interview.academy.services.PostService;
@@ -53,5 +54,10 @@ public class PostServiceImpl implements PostService {
         }
 
         return postRepository.findAllByStatus(PostStatus.PUBLISHED);
+    }
+
+    @Override
+    public List<Post> getDraftPosts(User user) {
+        return postRepository.findAllByAuthorAndStatus(user, PostStatus.DRAFT);
     }
 }
