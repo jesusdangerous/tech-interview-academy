@@ -1,13 +1,16 @@
 package com.interview.academy.controllers;
 
 import com.interview.academy.domain.CreatePostRequest;
+import com.interview.academy.domain.UpdatePostRequest;
 import com.interview.academy.domain.dtos.CreatePostRequestDto;
 import com.interview.academy.domain.dtos.PostDto;
+import com.interview.academy.domain.dtos.UpdatePostRequestDto;
 import com.interview.academy.domain.entities.Post;
 import com.interview.academy.domain.entities.User;
 import com.interview.academy.mappers.PostMapper;
 import com.interview.academy.services.PostService;
 import com.interview.academy.services.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,5 +57,16 @@ public class PostController {
         PostDto createdPostDto = postMapper.toDto(createdPost);
 
         return new ResponseEntity<>(createdPostDto, HttpStatus.CREATED);
+    }
+
+    @PutMapping(path = "/{id}")
+    public ResponseEntity<PostDto> updatePost(
+            @PathVariable UUID id,
+            @Valid @RequestBody UpdatePostRequestDto updatePostRequestDto) {
+        UpdatePostRequest updatePostRequest = postMapper.toUpdatePostRequest(updatePostRequestDto);
+        Post updatedPost = postService.updatePost(id, updatePostRequest);
+        PostDto updatedPostDto = postMapper.toDto(updatedPost);
+
+        return ResponseEntity.ok(updatedPostDto);
     }
 }

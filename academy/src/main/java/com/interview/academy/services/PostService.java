@@ -1,6 +1,7 @@
 package com.interview.academy.services;
 
 import com.interview.academy.domain.CreatePostRequest;
+import com.interview.academy.domain.UpdatePostRequest;
 import com.interview.academy.domain.entities.Post;
 import com.interview.academy.domain.entities.User;
 
@@ -12,5 +13,5 @@ public interface PostService {
     List<Post> getAllPosts(UUID categoryId, UUID tagId);
     List<Post> getDraftPosts(User user);
     Post createPost(User user, CreatePostRequest createPostRequest);
-
+    Post updatePost(UUID id, UpdatePostRequest updatePostRequest);
 }
