@@ -1,5 +1,6 @@
 package com.interview.academy.domain.dtos;
 
+import com.interview.academy.domain.PostStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,4 +24,5 @@ public class PostDto {
     private Integer readingTime;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private PostStatus status;
 }
