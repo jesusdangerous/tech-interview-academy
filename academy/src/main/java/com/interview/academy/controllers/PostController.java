@@ -1,5 +1,6 @@
 package com.interview.academy.controllers;
 
+import com.interview.academy.controllers.exceptions.ForbiddenOperationException;
 import com.interview.academy.domain.CreatePostRequest;
 import com.interview.academy.domain.UpdatePostRequest;
 import com.interview.academy.domain.dtos.CreatePostRequestDto;
@@ -59,10 +60,29 @@ public class PostController {
         return new ResponseEntity<>(createdPostDto, HttpStatus.CREATED);
     }
 
+//    @PutMapping(path = "/{id}")
+//    public ResponseEntity<PostDto> updatePost(
+//            @PathVariable UUID id,
+//            @Valid @RequestBody UpdatePostRequestDto updatePostRequestDto) {
+//        UpdatePostRequest updatePostRequest = postMapper.toUpdatePostRequest(updatePostRequestDto);
+//        Post updatedPost = postService.updatePost(id, updatePostRequest);
+//        PostDto updatedPostDto = postMapper.toDto(updatedPost);
+//
+//        return ResponseEntity.ok(updatedPostDto);
+//    }
     @PutMapping(path = "/{id}")
     public ResponseEntity<PostDto> updatePost(
             @PathVariable UUID id,
-            @Valid @RequestBody UpdatePostRequestDto updatePostRequestDto) {
+            @Valid @RequestBody UpdatePostRequestDto updatePostRequestDto,
+            @RequestAttribute UUID userId) {
+
+        User loggedInUser = userService.getUserById(userId);
+        Post existingPost = postService.getPost(id);
+
+        if (!existingPost.getAuthor().getId().equals(loggedInUser.getId())) {
+            throw new ForbiddenOperationException("You are not allowed to update this post");
+        }
+
         UpdatePostRequest updatePostRequest = postMapper.toUpdatePostRequest(updatePostRequestDto);
         Post updatedPost = postService.updatePost(id, updatePostRequest);
         PostDto updatedPostDto = postMapper.toDto(updatedPost);
@@ -77,8 +97,24 @@ public class PostController {
         return ResponseEntity.ok(postDto);
     }
 
+//    @DeleteMapping(path = "/{id}")
+//    public ResponseEntity<Void> deletePost(@PathVariable UUID id) {
+//        postService.deletePost(id);
+//        return ResponseEntity.noContent().build();
+//    }
+
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<Void> deletePost(@PathVariable UUID id) {
+    public ResponseEntity<Void> deletePost(
+            @PathVariable UUID id,
+            @RequestAttribute UUID userId) {
+
+        User loggedInUser = userService.getUserById(userId);
+        Post post = postService.getPost(id);
+
+        if (!post.getAuthor().getId().equals(loggedInUser.getId())) {
+            throw new ForbiddenOperationException("You are not allowed to delete this post");
+        }
+
         postService.deletePost(id);
         return ResponseEntity.noContent().build();
     }

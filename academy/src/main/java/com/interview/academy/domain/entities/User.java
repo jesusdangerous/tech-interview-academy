@@ -1,5 +1,6 @@
 package com.interview.academy.domain.entities;
 
+import com.interview.academy.domain.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -37,17 +38,17 @@ public class User {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(name, user.name) && Objects.equals(createdAt, user.createdAt);
+    public boolean equals(Object obj) {
+        return super.equals(obj);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, email, password, name, createdAt);
+        return Objects.hash(id, email, password, name, createdAt, role);
     }
 
     @PrePersist

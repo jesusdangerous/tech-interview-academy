@@ -26,27 +26,33 @@ public class SecurityConfig {
         return new JwtAuthenticationFilter(authenticationService);
     }
 
+//    @Bean
+//    public UserDetailsService userDetailsService(UserRepository userRepository) {
+//        AcademyUserDetailsService academyUserDetailsService = new AcademyUserDetailsService(userRepository);
+//
+//        String email = "user@test.com";
+//        userRepository.findByEmail(email).orElseGet(() -> {
+//            User newUser = User.builder()
+//                    .name("Test User")
+//                    .email(email)
+//                    .password(passwordEncoder().encode("password"))
+//                    .build();
+//            return userRepository.save(newUser);
+//        });
+//
+//        return academyUserDetailsService;
+//    }
+
     @Bean
     public UserDetailsService userDetailsService(UserRepository userRepository) {
-        AcademyUserDetailsService academyUserDetailsService = new AcademyUserDetailsService(userRepository);
-
-        String email = "user@test.com";
-        userRepository.findByEmail(email).orElseGet(() -> {
-            User newUser = User.builder()
-                    .name("Test User")
-                    .email(email)
-                    .password(passwordEncoder().encode("password"))
-                    .build();
-            return userRepository.save(newUser);
-        });
-
-        return academyUserDetailsService;
+        return new AcademyUserDetailsService(userRepository);
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/register").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/posts/drafts").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/v1/posts/**").permitAll()
