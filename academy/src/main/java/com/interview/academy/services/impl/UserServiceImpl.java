@@ -1,5 +1,6 @@
 package com.interview.academy.services.impl;
 
+import com.interview.academy.domain.Role;
 import com.interview.academy.domain.dtos.RegisterRequest;
 import com.interview.academy.domain.entities.User;
 import com.interview.academy.repositories.UserRepository;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -36,6 +38,7 @@ public class UserServiceImpl implements UserService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .name(request.getName())
+                .role(Role.USER)
                 .build();
 
         return userRepository.save(user);
