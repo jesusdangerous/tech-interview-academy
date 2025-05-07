@@ -33,13 +33,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const storedToken = localStorage.getItem('token');
       if (storedToken) {
         try {
-          // TODO: Add endpoint to fetch user profile
           // const userProfile = await apiService.getUserProfile();
           // setUser(userProfile);
           setIsAuthenticated(true);
           setToken(storedToken);
         } catch (error) {
-          // If token is invalid, clear authentication
           localStorage.removeItem('token');
           setIsAuthenticated(false);
           setUser(null);
@@ -58,8 +56,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       localStorage.setItem('token', response.token);
       setToken(response.token);
       setIsAuthenticated(true);
-
-      // TODO: Add endpoint to fetch user profile after login
       // const userProfile = await apiService.getUserProfile();
       // setUser(userProfile);
     } catch (error) {
@@ -72,7 +68,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setIsAuthenticated(false);
     setUser(null);
     setToken(null);
-    apiService.logout(); // This clears the token from apiService
+    apiService.logout();
   }, []);
 
   const register = useCallback(async (name: string, email: string, password: string) => {
@@ -83,7 +79,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setToken(response.token);
       setIsAuthenticated(true);
 
-      // TODO: Add endpoint to fetch user profile after registration
       // const userProfile = await apiService.getUserProfile();
       // setUser(userProfile);
     } catch (error) {
@@ -91,10 +86,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   }, []);
 
-  // Update apiService token when it changes
   useEffect(() => {
     if (token) {
-      // Update axios instance configuration
       const axiosInstance = apiService['api'];
       axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     }

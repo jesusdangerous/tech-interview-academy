@@ -1,6 +1,13 @@
 import axios, { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig, AxiosError } from 'axios';
 
 // Types
+
+export interface AuthUser {
+  id: string;
+  name: string;
+  email: string;
+}
+
 export interface LoginRequest {
   email: string;
   password: string;
@@ -122,7 +129,6 @@ class ApiService {
     };
   }
 
-  // Auth endpoints
   public async login(credentials: LoginRequest): Promise<AuthResponse> {
     const response: AxiosResponse<AuthResponse> = await this.api.post('/auth/login', credentials);
     localStorage.setItem('token', response.data.token);
@@ -205,17 +211,17 @@ class ApiService {
     await this.api.delete(`/tags/${id}`);
   }
 
-  // public async register(credentials: LoginRequest): Promise<AuthResponse> {
-  //   const response: AxiosResponse<AuthResponse> = await this.api.post('/auth/register', credentials);
-  //   localStorage.setItem('token', response.data.token);
-  //   return response.data;
-  // }
-  // apiService.ts
+
   public async register(credentials: { name: string, email: string, password: string }): Promise<AuthResponse> {
     const response: AxiosResponse<AuthResponse> = await this.api.post('/auth/register', credentials);
     localStorage.setItem('token', response.data.token);
     return response.data;
   }
+
+  // public async getUserProfile(): Promise<AuthUser> {
+  //   const response: AxiosResponse<AuthUser> = await this.api.get('/auth/me');
+  //   return response.data;
+  // }
 }
 
 // Export a singleton instance
