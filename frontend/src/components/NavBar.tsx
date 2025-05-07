@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate  } from 'react-router-dom';
 import {
   Navbar,
   NavbarBrand,
@@ -15,7 +15,8 @@ import {
   DropdownMenu,
   DropdownItem,
 } from '@nextui-org/react';
-import { Plus, BookOpen, Edit3, LogOut, User, BookDashed } from 'lucide-react';
+import { Plus, Edit3, LogOut, BookDashed } from 'lucide-react';
+
 
 interface NavBarProps {
   isAuthenticated: boolean;
@@ -32,6 +33,7 @@ const NavBar: React.FC<NavBarProps> = ({
   onLogout,
 }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
   const menuItems = [
@@ -53,13 +55,13 @@ const NavBar: React.FC<NavBarProps> = ({
 
       <NavbarContent className="sm:hidden pr-3" justify="center">
         <NavbarBrand>
-          <Link to="/" className="font-bold text-inherit">Blog Platform</Link>
+          <Link to="/" className="font-bold text-inherit">Tech Interview Academy</Link>
         </NavbarBrand>
       </NavbarContent>
 
       <NavbarContent className="hidden sm:flex gap-4" justify="start">
         <NavbarBrand>
-          <Link to="/" className="font-bold text-inherit">Blog Platform</Link>
+          <Link to="/" className="font-bold text-inherit">Tech Interview Academy</Link>
         </NavbarBrand>
         {menuItems.map((item) => (
           <NavbarItem
@@ -116,12 +118,13 @@ const NavBar: React.FC<NavBarProps> = ({
                     name={userProfile?.name}
                   />
                 </DropdownTrigger>
-                <DropdownMenu aria-label="User menu">                
+                <DropdownMenu aria-label="User menu">
                   <DropdownItem
-                    key="drafts"
-                    startContent={<Edit3 size={16} />}
+                      key="drafts"
+                      startContent={<Edit3 size={16} />}
+                      onPress={() => navigate('/posts/drafts')}
                   >
-                    <Link to="/posts/drafts">My Drafts</Link>
+                    My Drafts
                   </DropdownItem>
                   <DropdownItem
                     key="logout"
@@ -137,13 +140,18 @@ const NavBar: React.FC<NavBarProps> = ({
             </NavbarItem>
           </>
         ) : (
-          <>
-            <NavbarItem>
-              <Button as={Link} to="/login" variant="flat">
-                Log In
-              </Button>
-            </NavbarItem>
-          </>
+            <>
+              <NavbarItem>
+                <Button as={Link} to="/login" variant="flat">
+                  Log In
+                </Button>
+              </NavbarItem>
+              <NavbarItem>
+                <Button as={Link} to="/register" color="primary" variant="flat">
+                  Sign Up
+                </Button>
+              </NavbarItem>
+            </>
         )}
       </NavbarContent>
 
