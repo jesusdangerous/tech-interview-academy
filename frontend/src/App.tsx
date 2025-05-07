@@ -13,74 +13,74 @@ import RegisterPage from './pages/RegisterPage';
 
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { isAuthenticated } = useAuth();
-  
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
+    const { isAuthenticated } = useAuth();
 
-  return <>{children}</>;
+    if (!isAuthenticated) {
+        return <Navigate to="/login" replace />;
+    }
+
+    return <>{children}</>;
 };
 
 function AppContent() {
-  const { isAuthenticated, logout, user } = useAuth();
+    const { isAuthenticated, logout, user } = useAuth();
 
-  return (
-    <BrowserRouter>
-      <NavBar 
-        isAuthenticated={isAuthenticated}
-        userProfile={user ? {
-          name: user.name,
-          avatar: undefined // Add avatar support if needed
-        } : undefined}
-        onLogout={logout}
-      />
-      <main className="container mx-auto py-6">
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />  {/* New route for registration */}
-    
-          
-          <Route 
-            path="/posts/new" 
-            element={
-              <ProtectedRoute>
-                <EditPostPage />
-              </ProtectedRoute>
-            } 
-          />
-          <Route path="/posts/:id" element={<PostPage isAuthenticated={isAuthenticated}/>} />
-          <Route 
-            path="/posts/:id/edit" 
-            element={
-              <ProtectedRoute>
-                <EditPostPage />
-              </ProtectedRoute>
-            } 
-          />
-          <Route path="/categories" element={<CategoriesPage isAuthenticated={isAuthenticated}/>} />
-          <Route path="/tags" element={<TagsPage isAuthenticated={isAuthenticated}/>} />
-          <Route 
-            path="/posts/drafts" 
-            element={
-              <ProtectedRoute>
-                <DraftsPage />
-              </ProtectedRoute>
-            } 
-          />
-        </Routes>
-      </main>
-    </BrowserRouter>
-  );
+    return (
+        <BrowserRouter>
+            <NavBar
+                isAuthenticated={isAuthenticated}
+                userProfile={user ? {
+                    name: user.name,
+                    avatar: undefined
+                } : undefined}
+                onLogout={logout}
+            />
+            <main className="container mx-auto py-6">
+                <Routes>
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/register" element={<RegisterPage />} />
+
+
+                    <Route
+                        path="/posts/new"
+                        element={
+                            <ProtectedRoute>
+                                <EditPostPage />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route path="/posts/:id" element={<PostPage isAuthenticated={isAuthenticated}/>} />
+                    <Route
+                        path="/posts/:id/edit"
+                        element={
+                            <ProtectedRoute>
+                                <EditPostPage />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route path="/categories" element={<CategoriesPage isAuthenticated={isAuthenticated}/>} />
+                    <Route path="/tags" element={<TagsPage isAuthenticated={isAuthenticated}/>} />
+                    <Route
+                        path="/posts/drafts"
+                        element={
+                            <ProtectedRoute>
+                                <DraftsPage />
+                            </ProtectedRoute>
+                        }
+                    />
+                </Routes>
+            </main>
+        </BrowserRouter>
+    );
 }
 
 function App() {
-  return (
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
-  );
+    return (
+        <AuthProvider>
+            <AppContent />
+        </AuthProvider>
+    );
 }
 
 export default App;

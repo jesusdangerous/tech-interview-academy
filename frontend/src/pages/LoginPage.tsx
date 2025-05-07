@@ -17,8 +17,7 @@ const LoginPage = () => {
     setIsLoading(true);
 
     try {
-      const response = await apiService.login({ email, password });
-      login(response);
+      await login(email, password);
       navigate('/');
     } catch (err: any) {
       setError(err.message || 'Failed to login. Please try again.');
