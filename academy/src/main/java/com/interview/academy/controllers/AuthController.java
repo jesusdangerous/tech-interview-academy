@@ -64,18 +64,4 @@ public class AuthController {
             return ResponseEntity.status(400).build();
         }
     }
-
-//    @GetMapping("/me")
-//    public ResponseEntity<AuthUserDto> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
-//        if (userDetails == null) {
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-//        }
-//
-//        AuthUserDto userDto = new AuthUserDto(
-//                userDetails.getUsername(),
-//                userDetails.getUsername(),
-//                userDetails.getUsername()
-//        );
-//        return ResponseEntity.ok(userDto);
-//    }
 }
