@@ -3,14 +3,9 @@ package com.interview.academy.services.impl;
 import com.interview.academy.domain.CreatePostRequest;
 import com.interview.academy.domain.PostStatus;
 import com.interview.academy.domain.UpdatePostRequest;
-import com.interview.academy.domain.entities.Category;
-import com.interview.academy.domain.entities.Post;
-import com.interview.academy.domain.entities.Tag;
-import com.interview.academy.domain.entities.User;
+import com.interview.academy.domain.entities.*;
 import com.interview.academy.repositories.PostRepository;
-import com.interview.academy.services.CategoryService;
-import com.interview.academy.services.PostService;
-import com.interview.academy.services.TagService;
+import com.interview.academy.services.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,6 +24,8 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final CategoryService categoryService;
     private final TagService tagService;
+    private final EmailService emailService;
+    private final UserService userService;
 
     private static final int WORDS_PER_MINUTES = 200;
 
@@ -92,7 +89,36 @@ public class PostServiceImpl implements PostService {
         List<Tag> tags = tagService.getTagByIds(tagIds);
         newPost.setTags(new HashSet<>(tags));
 
+        if (newPost.getStatus().equals(PostStatus.PUBLISHED)) {
+            sendNewPostNotificationToAllUsers(newPost);
+        }
+
         return postRepository.save(newPost);
+    }
+
+    private void sendNewPostNotificationToAllUsers(Post post) {
+        List<User> allUsers = userService.getAllUsers();
+
+        if (allUsers.isEmpty()) {
+            return;
+        }
+
+        String[] allEmails = allUsers.stream()
+                .map(User::getEmail)
+                .filter(email -> email != null && !email.isBlank())
+                .toArray(String[]::new);
+
+        if (allEmails.length == 0) {
+            return;
+        }
+
+        Mail mail = Mail.builder()
+                .to(allEmails)
+                .subject("New Post Published: " + post.getTitle())
+                .body("A new post '" + post.getTitle() + "' has been published. Check it out!")
+                .build();
+
+        emailService.sendVerificationEmail(mail);
     }
 
     @Override
@@ -117,6 +143,10 @@ public class PostServiceImpl implements PostService {
         if (!existingTagIds.equals(updatePostRequestTagIds)) {
             List<Tag> newTags = tagService.getTagByIds(updatePostRequestTagIds);
             existingPost.setTags(new HashSet<>(newTags));
+        }
+
+        if (existingPost.getStatus().equals(PostStatus.PUBLISHED)) {
+            sendNewPostNotificationToAllUsers(existingPost);
         }
 
         return postRepository.save(existingPost);

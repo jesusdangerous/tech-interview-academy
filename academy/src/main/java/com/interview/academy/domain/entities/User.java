@@ -41,8 +41,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-//    @Column(nullable = false)
-//    private boolean isVerified = false;
+    @Column(nullable = false)
+    private boolean verified = false;
 
     @Override
     public boolean equals(Object obj) {
