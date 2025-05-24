@@ -3,6 +3,7 @@ package com.interview.academy.services.impl;
 import com.interview.academy.domain.CreatePostRequest;
 import com.interview.academy.domain.PostStatus;
 import com.interview.academy.domain.UpdatePostRequest;
+import com.interview.academy.domain.dtos.PostEventDto;
 import com.interview.academy.domain.entities.*;
 import com.interview.academy.repositories.PostRepository;
 import com.interview.academy.services.*;
@@ -26,8 +27,9 @@ public class PostServiceImpl implements PostService {
     private final TagService tagService;
     private final EmailService emailService;
     private final UserService userService;
-
+    private final KafkaProducerService kafkaProducerService;
     private static final int WORDS_PER_MINUTES = 200;
+
 
     @Override
     public Post getPost(UUID id) {
@@ -89,11 +91,17 @@ public class PostServiceImpl implements PostService {
         List<Tag> tags = tagService.getTagByIds(tagIds);
         newPost.setTags(new HashSet<>(tags));
 
-        if (newPost.getStatus().equals(PostStatus.PUBLISHED)) {
-            sendNewPostNotificationToAllUsers(newPost);
+        Post savedPost = postRepository.save(newPost);
+
+        if (savedPost.getStatus().equals(PostStatus.PUBLISHED)) {
+            PostEventDto event = new PostEventDto(
+                    savedPost.getTitle(),
+                    savedPost.getId()
+            );
+            kafkaProducerService.sendNewPostEvent(event);
         }
 
-        return postRepository.save(newPost);
+        return savedPost;
     }
 
     private void sendNewPostNotificationToAllUsers(Post post) {
@@ -145,11 +153,17 @@ public class PostServiceImpl implements PostService {
             existingPost.setTags(new HashSet<>(newTags));
         }
 
-        if (existingPost.getStatus().equals(PostStatus.PUBLISHED)) {
-            sendNewPostNotificationToAllUsers(existingPost);
-        }
+        Post savedPost = postRepository.save(existingPost);
 
-        return postRepository.save(existingPost);
+        if (savedPost.getStatus().equals(PostStatus.PUBLISHED)) {
+            PostEventDto event = new PostEventDto(
+                    savedPost.getTitle(),
+                    savedPost.getId()
+            );
+            kafkaProducerService.sendNewPostEvent(event);
+        };
+
+        return savedPost;
     }
 
     @Override
