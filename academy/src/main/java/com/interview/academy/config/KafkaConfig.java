@@ -35,7 +35,7 @@ public class KafkaConfig {
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 
         JsonDeserializer<PostEventDto> jsonDeserializer = new JsonDeserializer<>(PostEventDto.class);
-        jsonDeserializer.addTrustedPackages("*");
+        jsonDeserializer.addTrustedPackages("com.interview.academy.domain.dtos");
         jsonDeserializer.setUseTypeMapperForKey(false);
         jsonDeserializer.setRemoveTypeHeaders(false);
 

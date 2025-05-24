@@ -17,6 +17,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
+
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
@@ -30,6 +33,21 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserDetailsService userDetailsService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final MeterRegistry meterRegistry;
+    private final Counter registrationCounter;
+
+    public AuthenticationServiceImpl(AuthenticationManager authenticationManager,
+                                     UserDetailsService userDetailsService,
+                                     UserRepository userRepository,
+                                     PasswordEncoder passwordEncoder,
+                                     MeterRegistry meterRegistry) {
+        this.authenticationManager = authenticationManager;
+        this.userDetailsService = userDetailsService;
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.meterRegistry = meterRegistry;
+        this.registrationCounter = meterRegistry.counter("custom_registration_total");
+    }
 
     @Value("${jwt.secret}")
     private String secretKey;
@@ -76,6 +94,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .build();
 
         userRepository.save(user);
+        registrationCounter.increment();
         return new AcademyUserDetails(user);
     }
 
