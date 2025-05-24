@@ -104,31 +104,6 @@ public class PostServiceImpl implements PostService {
         return savedPost;
     }
 
-    private void sendNewPostNotificationToAllUsers(Post post) {
-        List<User> allUsers = userService.getAllUsers();
-
-        if (allUsers.isEmpty()) {
-            return;
-        }
-
-        String[] allEmails = allUsers.stream()
-                .map(User::getEmail)
-                .filter(email -> email != null && !email.isBlank())
-                .toArray(String[]::new);
-
-        if (allEmails.length == 0) {
-            return;
-        }
-
-        Mail mail = Mail.builder()
-                .to(allEmails)
-                .subject("New Post Published: " + post.getTitle())
-                .body("A new post '" + post.getTitle() + "' has been published. Check it out!")
-                .build();
-
-        emailService.sendVerificationEmail(mail);
-    }
-
     @Override
     @Transactional
     public Post updatePost(UUID id, UpdatePostRequest updatePostRequest) {
@@ -161,7 +136,7 @@ public class PostServiceImpl implements PostService {
                     savedPost.getId()
             );
             kafkaProducerService.sendNewPostEvent(event);
-        };
+        }
 
         return savedPost;
     }
