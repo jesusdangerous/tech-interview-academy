@@ -8,6 +8,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,19 +35,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final MeterRegistry meterRegistry;
-    private final Counter registrationCounter;
+    private Counter registrationCounter;
 
-    public AuthenticationServiceImpl(AuthenticationManager authenticationManager,
-                                     UserDetailsService userDetailsService,
-                                     UserRepository userRepository,
-                                     PasswordEncoder passwordEncoder,
-                                     MeterRegistry meterRegistry) {
-        this.authenticationManager = authenticationManager;
-        this.userDetailsService = userDetailsService;
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.meterRegistry = meterRegistry;
-        this.registrationCounter = meterRegistry.counter("custom_registration_total");
+    @PostConstruct
+    public void initMetrics() {
+        registrationCounter = Counter.builder("user.registration.count")
+                .description("Total number of user registrations")
+                .tags("service", "authentication")
+                .register(meterRegistry);
     }
 
     @Value("${jwt.secret}")
