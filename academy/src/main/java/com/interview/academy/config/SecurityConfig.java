@@ -1,6 +1,5 @@
 package com.interview.academy.config;
 
-import com.interview.academy.domain.entities.User;
 import com.interview.academy.repositories.UserRepository;
 import com.interview.academy.security.AcademyUserDetailsService;
 import com.interview.academy.security.JwtAuthenticationFilter;
@@ -11,6 +10,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -28,23 +28,6 @@ public class SecurityConfig {
     public JwtAuthenticationFilter jwtAuthenticationFilter(AuthenticationService authenticationService) {
         return new JwtAuthenticationFilter(authenticationService);
     }
-
-//    @Bean
-//    public UserDetailsService userDetailsService(UserRepository userRepository) {
-//        AcademyUserDetailsService academyUserDetailsService = new AcademyUserDetailsService(userRepository);
-//
-//        String email = "user@test.com";
-//        userRepository.findByEmail(email).orElseGet(() -> {
-//            User newUser = User.builder()
-//                    .name("Test User")
-//                    .email(email)
-//                    .password(passwordEncoder().encode("password"))
-//                    .build();
-//            return userRepository.save(newUser);
-//        });
-//
-//        return academyUserDetailsService;
-//    }
 
     @Bean
     public UserDetailsService userDetailsService(UserRepository userRepository) {
@@ -74,7 +57,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                .csrf(csrf -> csrf.disable())
+                .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 ).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
