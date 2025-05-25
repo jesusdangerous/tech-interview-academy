@@ -9,10 +9,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Component
 @RequiredArgsConstructor
@@ -43,7 +45,7 @@ public class UserReminderJob implements Job {
                 .body("Come to Interview Academy — new content and challenges are waiting for you!")
                 .build();
 
-        emailService.sendEmail(mail);
+        emailService.sendEmailAsync(mail);
         log.info("Notifications sent to {} users", emails.length);
     }
 }
