@@ -1,8 +1,11 @@
-package com.interview.academy.services;
+package com.interview.academy.services.impl;
 
 import com.interview.academy.domain.dtos.PostEventDto;
 import com.interview.academy.domain.entities.Mail;
 import com.interview.academy.domain.entities.User;
+import com.interview.academy.services.EmailNotificationConsumerService;
+import com.interview.academy.services.EmailService;
+import com.interview.academy.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
@@ -11,7 +14,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class EmailNotificationConsumer {
+public class EmailNotificationConsumerServiceImpl implements EmailNotificationConsumerService {
 
     private final UserService userService;
     private final EmailService emailService;
