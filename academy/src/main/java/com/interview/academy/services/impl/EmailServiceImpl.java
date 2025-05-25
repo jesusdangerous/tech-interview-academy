@@ -9,6 +9,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.CompletableFuture;
+
 @Service
 @RequiredArgsConstructor
 public class EmailServiceImpl implements EmailService {
@@ -20,7 +22,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     @Async
-    public void sendVerificationEmail(Mail mail) {
+    public void sendEmail(Mail mail) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(fromEmail);
         message.setTo(mail.getTo());
@@ -29,5 +31,19 @@ public class EmailServiceImpl implements EmailService {
 
 
         mailSender.send(message);
+    }
+
+    @Override
+    @Async
+    public CompletableFuture<Void> sendEmailAsync(Mail mail) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(fromEmail);
+        message.setTo(mail.getTo());
+        message.setSubject(mail.getSubject());
+        message.setText(mail.getBody());
+
+
+        mailSender.send(message);
+        return CompletableFuture.completedFuture(null);
     }
 }
