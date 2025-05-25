@@ -20,7 +20,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     @Async
-    public void sendVerificationEmail(Mail mail) {
+    public void sendEmail(Mail mail) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(fromEmail);
         message.setTo(mail.getTo());

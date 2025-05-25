@@ -4,5 +4,5 @@ import com.interview.academy.domain.entities.Mail;
 
 public interface EmailService {
 
-    void sendVerificationEmail(Mail mail);
+    void sendEmail(Mail mail);
 }

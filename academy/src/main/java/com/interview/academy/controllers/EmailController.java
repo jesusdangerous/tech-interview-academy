@@ -17,6 +17,6 @@ public class EmailController {
 
     @PostMapping("/verify")
     public void sendVerificationEmail(@RequestBody Mail mail) {
-        emailService.sendVerificationEmail(mail);
+        emailService.sendEmail(mail);
     }
 }

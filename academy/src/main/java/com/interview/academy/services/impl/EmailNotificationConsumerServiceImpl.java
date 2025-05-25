@@ -35,6 +35,6 @@ public class EmailNotificationConsumerServiceImpl implements EmailNotificationCo
                 .body("A new post '" + event.getTitle() + "' has been published. Check it out!")
                 .build();
 
-        emailService.sendVerificationEmail(mail);
+        emailService.sendEmail(mail);
     }
 }
