@@ -5,9 +5,9 @@ import com.interview.academy.domain.PostStatus;
 import com.interview.academy.domain.UpdatePostRequest;
 import com.interview.academy.domain.dtos.PostEventDto;
 import com.interview.academy.domain.entities.*;
-import com.interview.academy.events.PostCreatedEvent;
-import com.interview.academy.events.PostDeletedEvent;
-import com.interview.academy.events.PostUpdatedEvent;
+import com.interview.academy.events.posts.PostCreatedEvent;
+import com.interview.academy.events.posts.PostDeletedEvent;
+import com.interview.academy.events.posts.PostUpdatedEvent;
 import com.interview.academy.repositories.PostRepository;
 import com.interview.academy.services.*;
 import jakarta.persistence.EntityNotFoundException;
@@ -104,7 +104,7 @@ public class PostServiceImpl implements PostService {
             kafkaProducerService.sendNewPostEvent(event);
         }
 
-        eventPublisher.publishEvent(new PostCreatedEvent(savedPost.getId(), savedPost.getTitle()));
+        eventPublisher.publishEvent(new PostCreatedEvent(this, savedPost));
         return savedPost;
     }
 
@@ -142,14 +142,14 @@ public class PostServiceImpl implements PostService {
             kafkaProducerService.sendNewPostEvent(event);
         }
 
-        eventPublisher.publishEvent(new PostUpdatedEvent(savedPost.getId(), savedPost.getTitle()));
+        eventPublisher.publishEvent(new PostUpdatedEvent(this, savedPost));
         return savedPost;
     }
 
     @Override
     public void deletePost(UUID id) {
         Post post = getPost(id);
-        eventPublisher.publishEvent(new PostDeletedEvent(post.getId(), post.getTitle()));
+        eventPublisher.publishEvent(new PostDeletedEvent(this, post));
         postRepository.delete(post);
     }
 
