@@ -1,11 +1,14 @@
 package com.interview.academy.services.impl;
 
 import com.interview.academy.domain.entities.Tag;
+import com.interview.academy.events.tags.TagsCreatedEvent;
+import com.interview.academy.events.tags.TagsDeletedEvent;
 import com.interview.academy.repositories.TagRepository;
 import com.interview.academy.services.TagService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -16,6 +19,7 @@ import java.util.stream.Collectors;
 public class TagServiceImpl implements TagService {
 
     private final TagRepository tagRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     public List<Tag> getTags() {
@@ -44,12 +48,14 @@ public class TagServiceImpl implements TagService {
         }
         savedTags.addAll(existingTags);
 
+        eventPublisher.publishEvent(new TagsCreatedEvent(this, savedTags));
         return savedTags;
     }
 
     @Transactional
     @Override
     public void deleteTag(UUID id) {
+        eventPublisher.publishEvent(new TagsDeletedEvent(this));
         tagRepository.findById(id).ifPresent(tag -> {
             if (!tag.getPosts().isEmpty()) {
                 throw new IllegalStateException("Cannot delete tag with posts");
