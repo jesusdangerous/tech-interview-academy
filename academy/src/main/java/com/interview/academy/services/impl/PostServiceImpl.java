@@ -25,8 +25,6 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final CategoryService categoryService;
     private final TagService tagService;
-    private final EmailService emailService;
-    private final UserService userService;
     private final KafkaProducerService kafkaProducerService;
     private static final int WORDS_PER_MINUTES = 200;
 
