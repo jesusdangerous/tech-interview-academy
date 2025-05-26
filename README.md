@@ -24,6 +24,8 @@ git clone https://github.com/jesusdangerous/tech-interview-academy.git
 cd tech-interview-academy
 ```
 
+> Рекомендуется перед запуском отключить впн (так как почтовый сервер не сможет отправлять сообщения)
+
 ### 2. Создать `.env` файл
 
 В корне проекта создайте файл `.env` со следующим содержимым:
@@ -70,7 +72,7 @@ tech-interview-academy/
 │   ├── src/             # Исходники Spring-приложения
 │   ├── Dockerfile
 │   └── docker-compose.yml
-├── frontend/            # Vite-проект
+├── frontend/            # React-проект
 ├── .env                 # Конфигурация окружения
 └── README.md
 ```
