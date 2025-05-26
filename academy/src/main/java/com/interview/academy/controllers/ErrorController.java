@@ -1,6 +1,6 @@
 package com.interview.academy.controllers;
 
-import com.interview.academy.controllers.exceptions.ForbiddenOperationException;
+import com.interview.academy.exceptions.ForbiddenOperationException;
 import com.interview.academy.domain.dtos.ApiErrorResponse;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;

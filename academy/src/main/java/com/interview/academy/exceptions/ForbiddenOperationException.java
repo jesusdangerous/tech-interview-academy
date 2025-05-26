@@ -1,4 +1,4 @@
-package com.interview.academy.controllers.exceptions;
+package com.interview.academy.exceptions;
 
 
 public class ForbiddenOperationException extends RuntimeException {
