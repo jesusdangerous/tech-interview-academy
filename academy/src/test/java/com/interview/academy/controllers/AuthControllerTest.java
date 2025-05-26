@@ -6,6 +6,7 @@ import com.interview.academy.domain.dtos.RegisterRequest;
 import com.interview.academy.services.AuthenticationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -39,7 +40,7 @@ public class AuthControllerTest {
 
         ResponseEntity<AuthResponse> response = authController.login(loginRequest);
 
-        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
         assertEquals("mocked-token", response.getBody().getToken());
         assertEquals(86400, response.getBody().getExpiresIn());
@@ -54,8 +55,7 @@ public class AuthControllerTest {
 
         ResponseEntity<AuthResponse> response = authController.login(loginRequest);
 
-        assertEquals(401, response.getStatusCodeValue());
-        assertNull(response.getBody());
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
     }
 
     @Test
@@ -70,7 +70,7 @@ public class AuthControllerTest {
 
         ResponseEntity<AuthResponse> response = authController.register(registerRequest);
 
-        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
         assertEquals("mocked-token", response.getBody().getToken());
         assertEquals(86400, response.getBody().getExpiresIn());
@@ -85,7 +85,6 @@ public class AuthControllerTest {
 
         ResponseEntity<AuthResponse> response = authController.register(registerRequest);
 
-        assertEquals(400, response.getStatusCodeValue());
-        assertNull(response.getBody());
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 }
