@@ -1,5 +1,6 @@
 package com.interview.academy.controllers;
 
+import com.interview.academy.events.posts.PostCreatedEvent;
 import com.interview.academy.exceptions.ForbiddenOperationException;
 import com.interview.academy.domain.CreatePostRequest;
 import com.interview.academy.domain.UpdatePostRequest;

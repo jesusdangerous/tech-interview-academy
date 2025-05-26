@@ -5,10 +5,14 @@ import com.interview.academy.domain.PostStatus;
 import com.interview.academy.domain.UpdatePostRequest;
 import com.interview.academy.domain.dtos.PostEventDto;
 import com.interview.academy.domain.entities.*;
+import com.interview.academy.events.posts.PostCreatedEvent;
+import com.interview.academy.events.posts.PostDeletedEvent;
+import com.interview.academy.events.posts.PostUpdatedEvent;
 import com.interview.academy.repositories.PostRepository;
 import com.interview.academy.services.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +30,7 @@ public class PostServiceImpl implements PostService {
     private final CategoryService categoryService;
     private final TagService tagService;
     private final KafkaProducerService kafkaProducerService;
+    private final ApplicationEventPublisher eventPublisher;
     private static final int WORDS_PER_MINUTES = 200;
 
 
@@ -99,6 +104,7 @@ public class PostServiceImpl implements PostService {
             kafkaProducerService.sendNewPostEvent(event);
         }
 
+        eventPublisher.publishEvent(new PostCreatedEvent(this, savedPost));
         return savedPost;
     }
 
@@ -136,12 +142,14 @@ public class PostServiceImpl implements PostService {
             kafkaProducerService.sendNewPostEvent(event);
         }
 
+        eventPublisher.publishEvent(new PostUpdatedEvent(this, savedPost));
         return savedPost;
     }
 
     @Override
     public void deletePost(UUID id) {
         Post post = getPost(id);
+        eventPublisher.publishEvent(new PostDeletedEvent(this, post));
         postRepository.delete(post);
     }
 
