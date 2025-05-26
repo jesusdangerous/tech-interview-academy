@@ -1,6 +1,7 @@
 package com.interview.academy.aspects;
 
 import com.interview.academy.domain.dtos.PostEventDto;
+import com.interview.academy.exceptions.KafkaProducerException;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -25,7 +26,7 @@ public class KafkaLoggingAspect {
 
         } catch (Exception ex) {
             log.error("[Kafka Producer] Failed to send message to topic 'new-post-topic'. Error: {}", ex.getMessage(), ex);
-            throw ex;
+            throw new KafkaProducerException("Failed to send message to Kafka", ex);
         }
     }
 }
