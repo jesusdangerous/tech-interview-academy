@@ -60,16 +60,6 @@ public class PostController {
         return new ResponseEntity<>(createdPostDto, HttpStatus.CREATED);
     }
 
-//    @PutMapping(path = "/{id}")
-//    public ResponseEntity<PostDto> updatePost(
-//            @PathVariable UUID id,
-//            @Valid @RequestBody UpdatePostRequestDto updatePostRequestDto) {
-//        UpdatePostRequest updatePostRequest = postMapper.toUpdatePostRequest(updatePostRequestDto);
-//        Post updatedPost = postService.updatePost(id, updatePostRequest);
-//        PostDto updatedPostDto = postMapper.toDto(updatedPost);
-//
-//        return ResponseEntity.ok(updatedPostDto);
-//    }
     @PutMapping(path = "/{id}")
     public ResponseEntity<PostDto> updatePost(
             @PathVariable UUID id,
@@ -96,12 +86,6 @@ public class PostController {
         PostDto postDto = postMapper.toDto(post);
         return ResponseEntity.ok(postDto);
     }
-
-//    @DeleteMapping(path = "/{id}")
-//    public ResponseEntity<Void> deletePost(@PathVariable UUID id) {
-//        postService.deletePost(id);
-//        return ResponseEntity.noContent().build();
-//    }
 
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<Void> deletePost(
