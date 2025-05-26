@@ -9,7 +9,7 @@ services:
       - "8090:8080"
     environment:
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-      - SPRING_PROFILES_ACTIVE=default
+      - SPRING_PROFILES_ACTIVE=docker
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - JWT_SECRET_KEY=${JWT_SECRET_KEY}
       - MAIL_NAME=${MAIL_NAME}
