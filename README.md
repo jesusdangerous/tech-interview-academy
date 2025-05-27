@@ -28,7 +28,7 @@ cd tech-interview-academy
 
 ### 2. Создать `.env` файл
 
-В корне проекта создайте файл `.env` со следующим содержимым:
+В корне проекта /academy создайте файл `.env` со следующим содержимым:
 
 ```env
 POSTGRES_PASSWORD=your_postgres_password
