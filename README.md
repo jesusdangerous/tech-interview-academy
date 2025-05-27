@@ -55,10 +55,10 @@ docker-compose up --build
 
 | Сервис       | Адрес                        |
 |--------------|------------------------------|
-| Backend API  | http://localhost:8090        |
+| Backend API  | http://localhost:8080        |
 | Frontend     | http://localhost:5173        |
 | Adminer      | http://localhost:8080        |
-| Prometheus   | http://localhost:9090        |
+| Prometheus   | http://localhost:8090        |
 | Grafana      | http://localhost:3000        |
 | Kafka        | `kafka:9092` (внутри docker-сети) |
 
